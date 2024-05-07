@@ -1,6 +1,8 @@
+import { useFetch } from "@/hooks/useFetch";
 import { Heading, Icon } from "@amsterdam/design-system-react";
 import { SpinnerIcon } from "@amsterdam/design-system-react-icons";
 import React from "react";
+import { Loading } from "./Loading";
 
 interface Buurt {
   identificatie: string;
@@ -20,54 +22,31 @@ interface BuurtenResponse {
 }
 
 export const Buurten = (props: { wijkId: string }) => {
-  const [buurten, setBuurten] = React.useState<Buurt[]>([]);
-  const [error, setError] = React.useState<string | null>(null);
-  const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  const [naamWijk, setNaamWijk] = React.useState<string | null>(null);
-
-  const fetchAreas = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}gebieden/buurten/?ligtInWijk.identificatie=${props.wijkId}`
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch buurten");
-      }
-
-      const data: BuurtenResponse = await response.json();
-      setBuurten(data._embedded.buurten);
-      setNaamWijk(data._embedded.buurten[0]._links.ligtInWijk.title);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  React.useEffect(() => {
-    fetchAreas();
-  }, []);
+  const { data, isProcessing, isSuccess, error } = useFetch<BuurtenResponse>(
+    `gebieden/buurten/?ligtInWijk.identificatie=${props.wijkId}`
+  );
 
   if (error) {
     return <h1>{error}</h1>;
   }
 
+  if (isProcessing) {
+    return <Loading />;
+  }
+
   return (
     <>
-      {isLoading && <Icon className="spinner" svg={SpinnerIcon} />}
-      {!isLoading && (
+      {!isProcessing && isSuccess && (
         <div>
-          <Heading level={4}>Buurten in de wijk {naamWijk}</Heading>
+          <Heading level={4}>
+            Buurten in de wijk{" "}
+            {data?._embedded.buurten[0]._links.ligtInWijk.title}
+          </Heading>
 
           <ul>
-            {buurten.length > 0 ? (
-              buurten.map((area) => (
-                <li key={area.identificatie}>{area.naam}</li>
-              ))
-            ) : (
-              <Icon className="spinner" svg={SpinnerIcon} />
-            )}
+            {data?._embedded.buurten.map((area) => (
+              <li key={area.identificatie}>{area.naam}</li>
+            ))}
           </ul>
         </div>
       )}

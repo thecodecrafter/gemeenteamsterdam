@@ -1,12 +1,14 @@
 import { screen, render, waitFor } from "@testing-library/react";
-import { mockFetchSuccess } from "../../__mocks__/mock-fetch";
 import { Buurten } from "./Buurten";
+import axios from "axios";
+
+jest.mock("axios");
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe("Buurten", () => {
   it("renders page with the title 'Buurten in de wijk Naam Wijk'", async () => {
-    global.fetch = mockFetchSuccess(
-      true,
-      Promise.resolve({
+    mockedAxios.get.mockResolvedValue({
+      data: {
         _embedded: {
           buurten: [
             {
@@ -21,19 +23,19 @@ describe("Buurten", () => {
             },
           ],
         },
-      })
-    );
+      },
+    });
 
     render(<Buurten wijkId="" />);
 
     await waitFor(() => screen.getByText("Buurten in de wijk Naam Wijk"));
   });
 
-  it("renders page with error message 'Failed to fetch buurten'", async () => {
-    global.fetch = mockFetchSuccess(false, Promise.resolve({}));
+  it("renders page with error message", async () => {
+    mockedAxios.get.mockRejectedValue({});
 
     render(<Buurten wijkId="" />);
 
-    await waitFor(() => screen.getByText("Failed to fetch buurten"));
+    await waitFor(() => screen.getByText("Something went wrong."));
   });
 });

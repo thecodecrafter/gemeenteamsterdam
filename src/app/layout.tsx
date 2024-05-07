@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="nl">
-      <body>
+      <body suppressHydrationWarning={true}>
         <div className="container mx-auto rootlayout">
           <CustomHeader />
         </div>

@@ -7,9 +7,7 @@ export default function Home() {
   return (
     <>
       <div className="container mx-auto">
-        <Heading level={4}>
-          Kies een stadsdeel
-        </Heading>
+        <Heading level={4}>Kies een stadsdeel</Heading>
         <District />
       </div>
     </>

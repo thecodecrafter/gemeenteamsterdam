@@ -1,6 +1,7 @@
-import { Heading, Icon, Link } from "@amsterdam/design-system-react";
-import { SpinnerIcon } from "@amsterdam/design-system-react-icons";
+import { useFetch } from "@/hooks/useFetch";
+import { Heading, Link } from "@amsterdam/design-system-react";
 import React from "react";
+import { Loading } from "./Loading";
 
 interface Wijk {
   identificatie: string;
@@ -20,49 +21,29 @@ interface WijkenResponse {
 }
 
 export const Wijken = (props: { stadsdeelId: string }) => {
-  const [wijken, setWijken] = React.useState<Wijk[]>([]);
-  const [error, setError] = React.useState<string | null>(null);
-  const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  const [naamStadsdeel, setNaamStadsdeel] = React.useState<string | null>(null);
-
-  const fetchBuurten = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}gebieden/wijken/?ligtInStadsdeel.identificatie=${props.stadsdeelId}`
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch wijken");
-      }
-
-      const data: WijkenResponse = await response.json();
-
-      setNaamStadsdeel(data._embedded.wijken[0]._links.ligtInStadsdeel.title);
-      setWijken(data._embedded.wijken);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  React.useEffect(() => {
-    fetchBuurten();
-  }, []);
+  const { data, isProcessing, isSuccess, error } = useFetch<WijkenResponse>(
+    `gebieden/wijken/?ligtInStadsdeel.identificatie=${props.stadsdeelId}`
+  );
 
   if (error) {
     return <h1>{error}</h1>;
   }
 
+  if (isProcessing) {
+    return <Loading />;
+  }
+
   return (
     <>
-      {isLoading && <Icon className="spinner" svg={SpinnerIcon} />}
-      {!isLoading && (
+      {!isProcessing && isSuccess && (
         <div>
-          <Heading level={4}>Wijken in stadsdeel {naamStadsdeel}</Heading>
+          <Heading level={4}>
+            Wijken in stadsdeel{" "}
+            {data?._embedded.wijken[0]._links.ligtInStadsdeel.title}
+          </Heading>
 
           <ul>
-            {wijken.map((buurt) => (
+            {data?._embedded.wijken.map((buurt) => (
               <li key={buurt.identificatie}>
                 <Link
                   key={buurt.identificatie}
