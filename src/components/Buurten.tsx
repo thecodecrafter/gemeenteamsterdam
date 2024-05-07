@@ -1,5 +1,5 @@
 import { useFetch } from "@/hooks/useFetch";
-import { Heading, Icon } from "@amsterdam/design-system-react";
+import { Heading, Icon, UnorderedList } from "@amsterdam/design-system-react";
 import { SpinnerIcon } from "@amsterdam/design-system-react-icons";
 import React from "react";
 import { Loading } from "./Loading";
@@ -43,11 +43,13 @@ export const Buurten = (props: { wijkId: string }) => {
             {data?._embedded.buurten[0]._links.ligtInWijk.title}
           </Heading>
 
-          <ul>
+          <UnorderedList>
             {data?._embedded.buurten.map((area) => (
-              <li key={area.identificatie}>{area.naam}</li>
+              <UnorderedList.Item key={area.identificatie}>
+                {area.naam}
+              </UnorderedList.Item>
             ))}
-          </ul>
+          </UnorderedList>
         </div>
       )}
     </>
