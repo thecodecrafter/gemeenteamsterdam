@@ -1,23 +1,23 @@
 import { screen, render, waitFor } from "@testing-library/react";
-import { Buurten } from "./Buurten";
+import { Wijken } from "../src/components/Wijken";
 import axios from "axios";
 
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-describe("Buurten", () => {
-  it("renders page with the title 'Buurten in de wijk Naam Wijk'", async () => {
+describe("Wijken", () => {
+  it("renders page with the title 'Wijken in stadsdeel Naam Stadsdeel'", async () => {
     mockedAxios.get.mockResolvedValue({
       data: {
         _embedded: {
-          buurten: [
+          wijken: [
             {
               identificatie: 1,
-              naam: "Buurtnaam",
+              naam: "Wijknaam",
               _links: {
-                ligtInWijk: {
+                ligtInStadsdeel: {
                   href: "",
-                  title: "Naam Wijk",
+                  title: "Naam Stadsdeel",
                 },
               },
             },
@@ -26,15 +26,15 @@ describe("Buurten", () => {
       },
     });
 
-    render(<Buurten wijkId="" />);
+    render(<Wijken stadsdeelId="" />);
 
-    await waitFor(() => screen.getByText("Buurten in de wijk Naam Wijk"));
+    await waitFor(() => screen.getByText("Wijken in stadsdeel Naam Stadsdeel"));
   });
 
   it("renders page with error message", async () => {
     mockedAxios.get.mockRejectedValue({});
 
-    render(<Buurten wijkId="" />);
+    render(<Wijken stadsdeelId="" />);
 
     await waitFor(() => screen.getByText("Something went wrong."));
   });

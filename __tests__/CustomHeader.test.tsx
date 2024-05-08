@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import CustomHeader from "./CustomHeader";
+import CustomHeader from "../src/components/CustomHeader";
 
 describe("CustomHeader", () => {
   test("Should show the title 'Data Amsterdam'", async () => {

@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import { District } from "./District";
+import { District } from "../src/components/District";
 import axios from "axios";
 
 jest.mock("axios");
