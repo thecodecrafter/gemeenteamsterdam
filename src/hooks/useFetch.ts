@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 export interface IUseFetchResponse<T> {
@@ -10,7 +10,7 @@ export interface IUseFetchResponse<T> {
 }
 
 export const useFetch = <T>(url: string): IUseFetchResponse<T> => {
-  const [state, setState] = React.useState<IUseFetchResponse<T>>({
+  const [state, setState] = useState<IUseFetchResponse<T>>({
     data: null,
     isProcessing: false,
     hasFetched: false,
@@ -18,7 +18,7 @@ export const useFetch = <T>(url: string): IUseFetchResponse<T> => {
     error: null,
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     setState((prevState) => ({
       ...prevState,
       isProcessing: true,

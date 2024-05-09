@@ -1,6 +1,5 @@
 import { useFetch } from "@/hooks/useFetch";
-import { Heading, Icon, UnorderedList } from "@amsterdam/design-system-react";
-import { SpinnerIcon } from "@amsterdam/design-system-react-icons";
+import { Heading, UnorderedList } from "@amsterdam/design-system-react";
 import React from "react";
 import { Loading } from "./Loading";
 
@@ -26,6 +25,8 @@ export const Buurten = (props: { wijkId: string }) => {
     `gebieden/buurten/?ligtInWijk.identificatie=${props.wijkId}`
   );
 
+  const wijkTitle = data?._embedded.buurten[0]._links.ligtInWijk.title;
+
   if (error) {
     return <h1>{error}</h1>;
   }
@@ -38,14 +39,16 @@ export const Buurten = (props: { wijkId: string }) => {
     <>
       {!isProcessing && isSuccess && (
         <div>
-          <Heading level={4}>
-            Buurten in de wijk{" "}
-            {data?._embedded.buurten[0]._links.ligtInWijk.title}
+          <Heading level={4} aria-label={`Buurten in de wijk ${wijkTitle}`}>
+            Buurten in de wijk {wijkTitle}
           </Heading>
 
           <UnorderedList>
             {data?._embedded.buurten.map((area) => (
-              <UnorderedList.Item key={area.identificatie}>
+              <UnorderedList.Item
+                key={area.identificatie}
+                aria-label={area.naam}
+              >
                 {area.naam}
               </UnorderedList.Item>
             ))}

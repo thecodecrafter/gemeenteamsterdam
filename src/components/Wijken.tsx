@@ -1,5 +1,5 @@
 import { useFetch } from "@/hooks/useFetch";
-import { Heading, Link } from "@amsterdam/design-system-react";
+import { Heading, Link, OrderedList } from "@amsterdam/design-system-react";
 import React from "react";
 import { Loading } from "./Loading";
 
@@ -25,6 +25,8 @@ export const Wijken = (props: { stadsdeelId: string }) => {
     `gebieden/wijken/?ligtInStadsdeel.identificatie=${props.stadsdeelId}`
   );
 
+  const stadsdeelTitle = data?._embedded.wijken[0]._links.ligtInStadsdeel.title;
+
   if (error) {
     return <h1>{error}</h1>;
   }
@@ -37,23 +39,26 @@ export const Wijken = (props: { stadsdeelId: string }) => {
     <>
       {!isProcessing && isSuccess && (
         <div>
-          <Heading level={4}>
-            Wijken in stadsdeel{" "}
-            {data?._embedded.wijken[0]._links.ligtInStadsdeel.title}
+          <Heading
+            level={4}
+            aria-label={`Wijken in stadsdeel ${stadsdeelTitle}`}
+          >
+            Wijken in stadsdeel {stadsdeelTitle}
           </Heading>
 
-          <ul>
+          <OrderedList markers>
             {data?._embedded.wijken.map((buurt) => (
-              <li key={buurt.identificatie}>
+              <OrderedList.Item key={buurt.identificatie}>
                 <Link
                   key={buurt.identificatie}
+                  aria-label={buurt.naam}
                   href={`/buurten/${buurt.identificatie}`}
                 >
                   {buurt.naam}
                 </Link>
-              </li>
+              </OrderedList.Item>
             ))}
-          </ul>
+          </OrderedList>
         </div>
       )}
     </>

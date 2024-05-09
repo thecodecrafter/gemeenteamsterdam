@@ -1,7 +1,7 @@
 "use client";
 
-import * as React from "react";
-import { Link } from "@amsterdam/design-system-react";
+import React from "react";
+import { Link, OrderedList } from "@amsterdam/design-system-react";
 import { useFetch } from "@/hooks/useFetch";
 import { Loading } from "./Loading";
 
@@ -17,7 +17,7 @@ interface DistrictResponse {
 }
 
 export const District = () => {
-  const { data, isProcessing, error } = useFetch<DistrictResponse>(
+  const { data, isProcessing, isSuccess, error } = useFetch<DistrictResponse>(
     "gebieden/stadsdelen/"
   );
 
@@ -31,20 +31,21 @@ export const District = () => {
 
   return (
     <>
-      {!isProcessing && (
+      {!isProcessing && isSuccess && (
         <div>
-          <ul>
+          <OrderedList markers>
             {data?._embedded.stadsdelen.map((district) => (
-              <li key={district.identificatie}>
+              <OrderedList.Item key={district.identificatie}>
                 <Link
                   key={district.identificatie}
                   href={`/wijken/${district.identificatie}`}
+                  aria-label={district.naam}
                 >
                   {district.naam}
                 </Link>
-              </li>
+              </OrderedList.Item>
             ))}
-          </ul>
+          </OrderedList>
         </div>
       )}
     </>

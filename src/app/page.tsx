@@ -5,11 +5,9 @@ import { District } from "@/components/District";
 
 export default function Home() {
   return (
-    <>
-      <div className="container mx-auto">
-        <Heading level={4}>Kies een stadsdeel</Heading>
-        <District />
-      </div>
-    </>
+    <div className="container mx-auto">
+      <Heading level={4}>Kies een stadsdeel</Heading>
+      <District />
+    </div>
   );
 }
