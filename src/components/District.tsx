@@ -4,6 +4,7 @@ import React from "react";
 import { Link, OrderedList } from "@amsterdam/design-system-react";
 import { useFetch } from "@/hooks/useFetch";
 import { Loading } from "./Loading";
+import Error from "./Error";
 
 interface District {
   identificatie: string;
@@ -22,7 +23,7 @@ export const District = () => {
   );
 
   if (error) {
-    return <h1>{error}</h1>;
+    return <Error message={error} />;
   }
 
   if (isProcessing) {

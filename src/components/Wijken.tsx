@@ -2,6 +2,7 @@ import { useFetch } from "@/hooks/useFetch";
 import { Heading, Link, OrderedList } from "@amsterdam/design-system-react";
 import React from "react";
 import { Loading } from "./Loading";
+import Error from "./Error";
 
 interface Wijk {
   identificatie: string;
@@ -25,11 +26,11 @@ export const Wijken = (props: { stadsdeelId: string }) => {
     `gebieden/wijken/?ligtInStadsdeel.identificatie=${props.stadsdeelId}`
   );
 
-  const stadsdeelTitle = data?._embedded.wijken[0]._links.ligtInStadsdeel.title;
-
   if (error) {
-    return <h1>{error}</h1>;
+    return <Error message={error} />;
   }
+
+  const stadsdeelTitle = data?._embedded.wijken[0]._links.ligtInStadsdeel.title;
 
   if (isProcessing) {
     return <Loading />;

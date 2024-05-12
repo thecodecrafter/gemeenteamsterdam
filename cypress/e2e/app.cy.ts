@@ -4,11 +4,11 @@ describe("Navigation", () => {
   const buurtenUrl = "**/buurten/?ligtInWijk.identificatie=*";
 
   it("should navigate to the Buurten page", () => {
-    cy.visit("http://localhost:3000/");
-
     cy.intercept("GET", stadsdelenUrl).as("getStadsdelen");
     cy.intercept("GET", wijkenUrl).as("getWijken");
     cy.intercept("GET", buurtenUrl).as("getBuurten");
+
+    cy.visit("http://localhost:3000/");
 
     cy.wait("@getStadsdelen").then((val) => {
       cy.get('a[href*="/wijken/03630000000018"]').click();
